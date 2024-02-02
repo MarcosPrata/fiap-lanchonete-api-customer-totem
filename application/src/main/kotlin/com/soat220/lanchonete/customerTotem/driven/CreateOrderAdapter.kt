@@ -9,8 +9,8 @@ import com.soat220.lanchonete.common.exception.ErrorCode
 import com.soat220.lanchonete.common.result.Failure
 import com.soat220.lanchonete.common.result.Result
 import com.soat220.lanchonete.common.result.Success
+import com.soat220.lanchonete.customerTotem.exception.CreateOrderException
 import com.soat220.lanchonete.customerTotem.port.CreateOrderPort
-import com.soat220.lanchonete.erp.exception.CreateProductException
 import org.springframework.stereotype.Service
 import com.soat220.lanchonete.common.model.Order as DomainOrder
 
@@ -39,8 +39,8 @@ class CreateOrderAdapter(
             Success(savedOrder.toDomain())
         } catch (e: Exception) {
             Failure(
-                CreateProductException(
-                    order.id.toString(),
+                CreateOrderException(
+                    order,
                     listOf(DomainException(e, ErrorCode.DATABASE_ERROR))
                 )
             )

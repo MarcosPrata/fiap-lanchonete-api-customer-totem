@@ -5,7 +5,7 @@ import com.soat220.lanchonete.common.model.Product
 import com.soat220.lanchonete.common.result.Result
 import com.soat220.lanchonete.common.result.Success
 import com.soat220.lanchonete.common.result.orThrow
-import com.soat220.lanchonete.erp.port.FindProductsPort
+import com.soat220.lanchonete.customerTotem.port.FindProductsPort
 import javax.inject.Named
 
 @Named

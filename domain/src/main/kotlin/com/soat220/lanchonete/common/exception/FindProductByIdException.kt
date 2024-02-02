@@ -1,7 +1,4 @@
-package com.soat220.lanchonete.erp.exception
-
-import com.soat220.lanchonete.common.exception.DomainException
-import com.soat220.lanchonete.common.exception.ErrorCode
+package com.soat220.lanchonete.common.exception
 
 class FindProductByIdException(
     errorCode: ErrorCode? = null

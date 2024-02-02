@@ -10,11 +10,9 @@ import com.soat220.lanchonete.common.result.Result
 import com.soat220.lanchonete.common.result.getOrNull
 import com.soat220.lanchonete.customerTotem.port.CreateCustomerPort
 import com.soat220.lanchonete.customerTotem.port.CreateOrderPort
-import com.soat220.lanchonete.customerTotem.port.CreatePaymentPort
 import com.soat220.lanchonete.customerTotem.port.FindCustomerByCpfPort
-import com.soat220.lanchonete.customerTotem.port.ProcessPaymentPort
+import com.soat220.lanchonete.customerTotem.port.FindProductByIdPort
 import com.soat220.lanchonete.customerTotem.usecase.dto.CreateOrder
-import com.soat220.lanchonete.erp.port.FindProductByIdPort
 import java.time.LocalDateTime
 import javax.inject.Named
 import com.soat220.lanchonete.common.model.Customer as DomainCustomer
@@ -25,8 +23,6 @@ class CreateOrder(
     private val findProductByIdPort: FindProductByIdPort,
     private val createOrderPort: CreateOrderPort,
     private val createCustomerPort: CreateCustomerPort,
-    private val createPaymentPort: CreatePaymentPort,
-    private val processPaymentPort: ProcessPaymentPort,
 ) {
     fun execute(createOrder: CreateOrder): Result<Order, DomainException> {
         val orderItems = createOrder.orderItems.map {

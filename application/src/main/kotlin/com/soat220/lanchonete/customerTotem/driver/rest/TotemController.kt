@@ -1,9 +1,9 @@
 package com.soat220.lanchonete.customerTotem.driver.rest
 
-import com.soat220.lanchonete.customerTotem.usecase.CreateOrder
 import com.soat220.lanchonete.customerTotem.usecase.ListProducts
 import com.soat220.lanchonete.common.result.orThrow
 import com.soat220.lanchonete.customerTotem.driver.rest.dto.request.CreateOrderRequest
+import com.soat220.lanchonete.customerTotem.usecase.CreateOrder
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping

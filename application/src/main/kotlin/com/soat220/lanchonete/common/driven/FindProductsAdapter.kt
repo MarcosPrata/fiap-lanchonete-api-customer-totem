@@ -1,4 +1,4 @@
-package com.soat220.lanchonete.erp.driven
+package com.soat220.lanchonete.common.driven
 
 import com.soat220.lanchonete.common.exception.DomainException
 import com.soat220.lanchonete.common.exception.ErrorCode
@@ -6,26 +6,23 @@ import com.soat220.lanchonete.common.result.Failure
 import com.soat220.lanchonete.common.result.Result
 import com.soat220.lanchonete.common.result.Success
 import com.soat220.lanchonete.common.driven.postgresdb.ProductRepository
-import com.soat220.lanchonete.erp.exception.FindProductByIdException
-import com.soat220.lanchonete.erp.port.FindProductByIdPort
+import com.soat220.lanchonete.common.exception.FindProductsException
+import com.soat220.lanchonete.customerTotem.port.FindProductsPort
 import org.springframework.stereotype.Service
 import com.soat220.lanchonete.common.model.Product as DomainProduct
 
 @Service
-class FindProductByIdAdapter(
+class FindProductsAdapter(
     private val productRepository: ProductRepository
-) : FindProductByIdPort {
-    override fun execute(productId: Long): Result<DomainProduct?, DomainException> {
+) : FindProductsPort {
+    override fun execute(): Result<List<DomainProduct>, DomainException> {
         return try {
-            val product = productRepository.findById(productId)
+            val products = productRepository.findAll()
 
-            Success(product.get().toDomain())
+            Success(products.map { it.toDomain() })
         } catch (e: Exception) {
             Failure(
-                FindProductByIdException(
-                    productId,
-                    listOf(DomainException(e, ErrorCode.DATABASE_ERROR))
-                )
+                FindProductsException(listOf(DomainException(e, ErrorCode.DATABASE_ERROR)))
             )
         }
     }

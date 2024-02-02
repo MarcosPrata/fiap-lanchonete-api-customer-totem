@@ -6,7 +6,7 @@ import com.soat220.lanchonete.common.exception.NotFoundException
 import com.soat220.lanchonete.common.result.Failure
 import com.soat220.lanchonete.common.result.Result
 import com.soat220.lanchonete.common.result.Success
-import com.soat220.lanchonete.kitchen.port.FindOrderByIdPort
+import com.soat220.lanchonete.customerTotem.port.FindOrderByIdPort
 import org.springframework.stereotype.Service
 
 @Service
