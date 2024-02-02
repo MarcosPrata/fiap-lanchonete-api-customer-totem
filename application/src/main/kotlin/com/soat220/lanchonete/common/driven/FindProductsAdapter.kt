@@ -18,7 +18,7 @@ class FindProductsAdapter(
     override fun execute(): Result<List<DomainProduct>, DomainException> {
         return try {
             val products = productRepository.findAll()
-
+//
             Success(products.map { it.toDomain() })
         } catch (e: Exception) {
             Failure(
