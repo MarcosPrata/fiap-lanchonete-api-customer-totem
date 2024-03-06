@@ -2,7 +2,7 @@ package com.soat220.lanchonete.customerTotem.port
 
 import com.soat220.lanchonete.common.model.Order
 
-interface ProcessPaymentPort {
+interface SendOrderQueuePort {
 
-    fun execute(order: Order, totalAmount: Double): Boolean
+    fun send(order: String)
 }

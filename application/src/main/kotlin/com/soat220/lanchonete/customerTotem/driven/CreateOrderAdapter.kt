@@ -19,6 +19,7 @@ class CreateOrderAdapter(
     private val orderRepository: OrderRepository,
     private val orderItemRepository: OrderItemRepository
 ) : CreateOrderPort {
+
     override fun execute(order: DomainOrder): Result<DomainOrder, DomainException> {
         return try {
             val orderItensTosave = order.orderItems.map { OrderItem.fromDomain(it) }
@@ -37,6 +38,7 @@ class CreateOrderAdapter(
             savedOrder.orderItems = savedOrderItens
 
             Success(savedOrder.toDomain())
+
         } catch (e: Exception) {
             Failure(
                 CreateOrderException(
