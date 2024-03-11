@@ -1,6 +1,5 @@
 package com.soat220.lanchonete.customerTotem.driven
 
-import com.soat220.lanchonete.common.model.Order
 import com.soat220.lanchonete.customerTotem.port.SendOrderQueuePort
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Value

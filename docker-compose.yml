@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      DB_URL: jdbc:postgresql://postgres:5432/customer-totem
+      DB_URL: jdbc:postgresql://postgres:5432/lanchonete?currentSchema=customertotem
     ports:
       - "80:80"
     depends_on:
@@ -19,6 +19,12 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: customer-totem
+      POSTGRES_DB: lanchonete
     ports:
       - "5432:5432"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"

@@ -10,7 +10,6 @@ import com.soat220.lanchonete.common.result.Result
 import com.soat220.lanchonete.common.result.getOrNull
 import com.soat220.lanchonete.customerTotem.port.*
 import com.soat220.lanchonete.customerTotem.usecase.dto.CreateOrder
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.soat220.lanchonete.common.config.LocalDateTimeTypeAdapter
 import java.time.LocalDateTime
@@ -42,8 +41,6 @@ class CreateOrder(
         }.toMutableList()
 
         val customer = getCustomer(createOrder)
-
-        verifyPayment(orderItems)
 
         val order = Order(
             customer = customer,
@@ -81,21 +78,5 @@ class CreateOrder(
         }
 
         return customer
-    }
-
-    private fun verifyPayment(orderItems: MutableList<OrderItem>) {
-        val totalAmount = orderItems
-            .map { it.product.price * it.amount }
-            .reduce { acc, price -> acc + price }
-
-//        val paymentStatus =
-//            if (processPaymentPort.execute(order, totalAmount)) PaymentStatus.APPROVED
-//            else PaymentStatus.DECLINED
-//
-//        createPaymentPort.execute(order, paymentStatus, totalAmount).orThrow()
-//
-//        if (paymentStatus != PaymentStatus.APPROVED) {
-//            throw PaymentNotApprovedException("Payment not approved", ErrorCode.PAYMENT_NOT_APPROVED)
-//        }
     }
 }
