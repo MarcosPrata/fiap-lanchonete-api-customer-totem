@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service
 @Service
 class SendOrderQueueAdapter(
     private val rabbitTemplate: RabbitTemplate,
-    @Value("\${queue.pedidos.registrados}") private val queue: String
+    @Value("\${exchange.pedidos.registrados}") private val ordersExchange: String
 ) : SendOrderQueuePort {
 
     override fun send(order: String) {
-        rabbitTemplate.convertAndSend(queue, order)
+        rabbitTemplate.setExchange(ordersExchange)
+        rabbitTemplate.convertAndSend(order)
     }
 }

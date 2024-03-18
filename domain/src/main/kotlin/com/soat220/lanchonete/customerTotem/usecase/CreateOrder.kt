@@ -53,7 +53,12 @@ class CreateOrder(
 
         val orderModel = createOrderPort.execute(order)
 
-        this.sendOrderQueuePort.send(gson.toJson(orderModel.getOrNull()))
+        val orderDomain = orderModel.getOrNull()
+
+        // sincronizar com payment-service
+        orderDomain!!.orderItems = orderItems
+
+        this.sendOrderQueuePort.send(gson.toJson(orderDomain))
 
         return orderModel
     }

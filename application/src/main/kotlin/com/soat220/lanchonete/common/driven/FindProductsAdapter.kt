@@ -17,8 +17,8 @@ class FindProductsAdapter(
 ) : FindProductsPort {
     override fun execute(): Result<List<DomainProduct>, DomainException> {
         return try {
-            val products = productRepository.findAll()
-//
+            val products = productRepository.findAll() //TODO GET para ERP/PRODUCTS
+
             Success(products.map { it.toDomain() })
         } catch (e: Exception) {
             Failure(

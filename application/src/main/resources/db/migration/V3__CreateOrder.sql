@@ -18,7 +18,6 @@ CREATE TABLE orderItem (
 	amount integer NOT NULL,
 
 	CONSTRAINT fk_orderitem_order FOREIGN KEY ("order_id") REFERENCES "order_table"(id),
-	CONSTRAINT fk_orderitem_item FOREIGN KEY ("product_id") REFERENCES product(id),
 	CONSTRAINT orderitem_pkey PRIMARY KEY (id)
 );
 
