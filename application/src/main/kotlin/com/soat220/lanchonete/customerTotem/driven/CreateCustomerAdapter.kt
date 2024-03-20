@@ -1,32 +1,30 @@
 package com.soat220.lanchonete.customerTotem.driven
 
-import com.soat220.lanchonete.common.driven.postgresdb.CustomerRepository
-import com.soat220.lanchonete.common.driven.postgresdb.model.Customer
+import com.soat220.lanchonete.common.driven.AbstractHttpClientService
 import com.soat220.lanchonete.common.exception.DomainException
 import com.soat220.lanchonete.common.exception.ErrorCode
 import com.soat220.lanchonete.common.result.Failure
 import com.soat220.lanchonete.common.result.Result
 import com.soat220.lanchonete.common.result.Success
-import com.soat220.lanchonete.customerTotem.exception.CreateCustomerException
 import com.soat220.lanchonete.customerTotem.port.CreateCustomerPort
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-
 import com.soat220.lanchonete.common.model.Customer as DomainCustomer
 
 @Service
 class CreateCustomerAdapter(
-    private val customerRepository: CustomerRepository
+    @Value("\${url.erp}") private val erpHost: String
 ) : CreateCustomerPort {
 
-    override fun execute(customer: DomainCustomer): Result<DomainCustomer, DomainException> {
+    override fun execute(customer: DomainCustomer): Result<DomainCustomer?, DomainException> {
         return try {
-            Success(customerRepository.save(Customer.fromDomain(customer)).toDomain())
+
+            val httpClientService = AbstractHttpClientService<DomainCustomer>()
+
+            Success(httpClientService.post("$erpHost:83/api/erp/customers", customer))
         } catch (e: Exception) {
             return Failure(
-                CreateCustomerException(
-                    customer.name,
-                    listOf(DomainException(e, ErrorCode.DATABASE_ERROR))
-                )
+                DomainException(e, ErrorCode.CREATE_CUSTOMER_ERROR)
             )
         }
     }

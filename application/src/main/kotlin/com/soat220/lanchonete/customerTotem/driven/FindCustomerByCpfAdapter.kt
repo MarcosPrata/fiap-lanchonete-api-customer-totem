@@ -1,6 +1,6 @@
 package com.soat220.lanchonete.customerTotem.driven
 
-import com.soat220.lanchonete.common.driven.postgresdb.CustomerRepository
+import com.soat220.lanchonete.common.driven.AbstractHttpClientService
 import com.soat220.lanchonete.common.exception.DomainException
 import com.soat220.lanchonete.common.exception.ErrorCode
 import com.soat220.lanchonete.common.model.Customer
@@ -8,23 +8,22 @@ import com.soat220.lanchonete.common.result.Failure
 import com.soat220.lanchonete.common.result.Result
 import com.soat220.lanchonete.common.result.Success
 import com.soat220.lanchonete.customerTotem.port.FindCustomerByCpfPort
-import java.util.Objects.nonNull
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
 class FindCustomerByCpfAdapter(
-    private val customerRepository: CustomerRepository
+    @Value("\${url.erp}") private val erpHost: String
 ) : FindCustomerByCpfPort {
     override fun execute(cpf: String?): Result<Customer?, DomainException> {
-        try {
-            if (nonNull(cpf)) {
-                return Success(customerRepository.findByCpf(cpf).toDomain())
-            }
-            return Success(null)
+        return try {
+
+            val httpClientService = AbstractHttpClientService<Customer>()
+
+            Success(httpClientService.get("$erpHost:83/api/erp/customers/find?cpf=$cpf"))
+
         } catch (e: Exception) {
-            return Failure(
-                DomainException(e, ErrorCode.DATABASE_ERROR)
-            )
+            Failure(DomainException(e, ErrorCode.ENTITY_NOT_FOUND_ERROR))
         }
     }
 }

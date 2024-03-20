@@ -9,6 +9,7 @@ services:
     environment:
       DB_URL: jdbc:postgresql://fiap-lanchonete-api-customer-totem-postgres-1:5432/customertotem
       SERVER_PORT: 80
+      ERP_URL: http://erp
       RABBIT_HOST: rabbitmq
     networks:
       - shared

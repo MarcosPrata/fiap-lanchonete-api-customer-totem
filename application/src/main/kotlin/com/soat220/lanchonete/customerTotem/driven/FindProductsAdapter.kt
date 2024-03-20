@@ -1,4 +1,4 @@
-package com.soat220.lanchonete.common.driven
+package com.soat220.lanchonete.customerTotem.driven
 
 import com.soat220.lanchonete.common.exception.DomainException
 import com.soat220.lanchonete.common.exception.ErrorCode

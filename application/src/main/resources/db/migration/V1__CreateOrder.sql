@@ -6,7 +6,6 @@ CREATE TABLE "order_table" (
 	created_at timestamp NOT NULL default now(),
 	updated_at timestamp NOT NULL default now(),
 
-	CONSTRAINT fk_order_customer FOREIGN KEY ("customer_id") REFERENCES customer(id),
 	CONSTRAINT order_pkey PRIMARY KEY (id)
 );
 

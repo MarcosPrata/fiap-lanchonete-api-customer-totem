@@ -6,6 +6,7 @@ import com.soat220.lanchonete.common.driven.postgresdb.model.Order
 import com.soat220.lanchonete.common.driven.postgresdb.model.OrderItem
 import com.soat220.lanchonete.common.exception.DomainException
 import com.soat220.lanchonete.common.exception.ErrorCode
+import com.soat220.lanchonete.common.model.Customer
 import com.soat220.lanchonete.common.result.Failure
 import com.soat220.lanchonete.common.result.Result
 import com.soat220.lanchonete.common.result.Success
@@ -20,7 +21,7 @@ class CreateOrderAdapter(
     private val orderItemRepository: OrderItemRepository
 ) : CreateOrderPort {
 
-    override fun execute(order: DomainOrder): Result<DomainOrder, DomainException> {
+    override fun execute(order: DomainOrder, customer: Customer?): Result<DomainOrder, DomainException> {
         return try {
             val orderItensTosave = order.orderItems.map { OrderItem.fromDomain(it) }
 
@@ -37,7 +38,7 @@ class CreateOrderAdapter(
 
             savedOrder.orderItems = savedOrderItens
 
-            Success(savedOrder.toDomain())
+            Success(savedOrder.toDomain(customer))
 
         } catch (e: Exception) {
             Failure(

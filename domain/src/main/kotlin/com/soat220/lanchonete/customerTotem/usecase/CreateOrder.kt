@@ -51,7 +51,7 @@ class CreateOrder(
             updatedAt = LocalDateTime.now()
         )
 
-        val orderModel = createOrderPort.execute(order)
+        val orderModel = createOrderPort.execute(order, customer)
 
         val orderDomain = orderModel.getOrNull()
 
@@ -67,10 +67,10 @@ class CreateOrder(
         var customer: DomainCustomer? = null
 
         if (createOrder.customer != null) {
-            val existentCustomer = findCustomerByCpfPort.execute(createOrder.customer.cpf)
+            val customerErp = findCustomerByCpfPort.execute(createOrder.customer.cpf)
 
-            if (existentCustomer.getOrNull() != null) {
-                customer = existentCustomer.getOrNull()
+            if (customerErp.getOrNull() != null) {
+                customer = customerErp.getOrNull()
             } else {
                 customer = createCustomerPort.execute(
                     DomainCustomer(
