@@ -1,0 +1,206 @@
+{
+	"info": {
+		"_postman_id": "ff487bf8-4151-44a9-91b5-0ab641cd5bee",
+		"name": "Lanchonete",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5044919"
+	},
+	"item": [
+		{
+			"name": "Create Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"productId\", pm.response.json().id)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"hambuerguer 4\",\r\n    \"description\": \"nova hamburguer vegetariano\",\r\n    \"price\": 20.5,\r\n    \"category\": \"SANDWICH\",\r\n    \"imageUrls\": []\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:83/api/erp/products",
+					"host": [
+						"{{host}}"
+					],
+					"port": "83",
+					"path": [
+						"api",
+						"erp",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"orderId\", pm.response.json().id)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"customer\" : {\r\n        \"cpf\": \"54122117046\",\r\n        \"email\": \"teste@email.com\",\r\n        \"name\": \"cliente\"\r\n    }, \r\n    \"orderItems\": [\r\n        {\r\n            \"productId\" : {{productId}},\r\n            \"amount\": 1\r\n        }\r\n    ],\r\n    \"notes\": \"sem picles por favor\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:80/api/customer-totem/orders",
+					"host": [
+						"{{host}}"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"customer-totem",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment Approve",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"orderId\": {{orderId}},\r\n    \"paymentStatus\": \"APPROVED\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:81/api/payment",
+					"host": [
+						"{{host}}"
+					],
+					"port": "81",
+					"path": [
+						"api",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get received orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:82/api/kitchen/orders/received",
+					"host": [
+						"{{host}}"
+					],
+					"port": "82",
+					"path": [
+						"api",
+						"kitchen",
+						"orders",
+						"received"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set preparing order",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:82/api/kitchen/orders/{{orderId}}/prepare",
+					"host": [
+						"{{host}}"
+					],
+					"port": "82",
+					"path": [
+						"api",
+						"kitchen",
+						"orders",
+						"{{orderId}}",
+						"prepare"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get preparing orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:82/api/kitchen/orders/preparing",
+					"host": [
+						"{{host}}"
+					],
+					"port": "82",
+					"path": [
+						"api",
+						"kitchen",
+						"orders",
+						"preparing"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set finished order",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:82/api/kitchen/orders/{{orderId}}/finish",
+					"host": [
+						"{{host}}"
+					],
+					"port": "82",
+					"path": [
+						"api",
+						"kitchen",
+						"orders",
+						"{{orderId}}",
+						"finish"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
