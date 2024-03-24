@@ -5,5 +5,5 @@ import com.soat220.lanchonete.common.model.Product
 import com.soat220.lanchonete.common.result.Result
 
 interface FindProductsPort {
-    fun execute(): Result<List<Product>, DomainException>
+    fun execute(): Result<List<Product>?, DomainException>
 }

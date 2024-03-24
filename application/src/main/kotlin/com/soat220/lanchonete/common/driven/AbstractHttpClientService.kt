@@ -1,8 +1,7 @@
 package com.soat220.lanchonete.common.driven
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.soat220.lanchonete.common.model.Customer
-import com.soat220.lanchonete.common.result.Success
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import java.net.URI
@@ -25,6 +24,25 @@ class AbstractHttpClientService<model> {
         // prevenir mapper exception
         if (response.statusCode() == HttpStatus.OK.value() ) {
             return ObjectMapper().readValue(response.body(), model::class.java)
+        }
+
+        return null;
+    }
+
+    inline fun <reified model> getForList(url: String): List<model>? {
+
+        val client = HttpClient.newBuilder().build();
+        val request = HttpRequest.newBuilder()
+            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .uri(URI.create(url))
+            .build();
+
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+        // prevenir mapper exception
+        if (response.statusCode() == HttpStatus.OK.value() ) {
+            val typeRef: TypeReference<List<model>> = object : TypeReference<List<model>>() {}
+            return ObjectMapper().readValue(response.body(), typeRef)
         }
 
         return null;

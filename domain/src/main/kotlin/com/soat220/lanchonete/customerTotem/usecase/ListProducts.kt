@@ -13,8 +13,12 @@ class ListProducts(
     private val findProductsPort: FindProductsPort
 ) {
     fun execute(): Result<List<Product>, DomainException> {
-        val products = findProductsPort.execute().orThrow()
+        val products: List<Product>? = findProductsPort.execute().orThrow()
 
-        return Success(products.filter { !it.deleted })
+        if (products != null) {
+            return Success(products.filter { !it.deleted })
+        }
+
+        return Success(mutableListOf())
     }
 }
