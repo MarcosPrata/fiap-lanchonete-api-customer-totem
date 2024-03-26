@@ -48,6 +48,26 @@
 			"response": []
 		},
 		{
+			"name": "List products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:80/api/customer-totem/products",
+					"host": [
+						"{{host}}"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"customer-totem",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create Order",
 			"event": [
 				{
@@ -66,7 +86,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"customer\" : {\r\n        \"cpf\": \"54122117046\",\r\n        \"email\": \"teste@email.com\",\r\n        \"name\": \"cliente\"\r\n    }, \r\n    \"orderItems\": [\r\n        {\r\n            \"productId\" : {{productId}},\r\n            \"amount\": 1\r\n        }\r\n    ],\r\n    \"notes\": \"sem picles por favor\"\r\n}",
+					"raw": "{\r\n    \"customer\" : {\r\n        \"cpf\": \"73627185005\",\r\n        \"email\": \"teste@email2.com\",\r\n        \"name\": \"cliente\"\r\n    }, \r\n    \"orderItems\": [\r\n        {\r\n            \"productId\" : {{productId}},\r\n            \"amount\": 1\r\n        }\r\n    ],\r\n    \"notes\": \"sem picles por favor\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -197,6 +217,35 @@
 						"orders",
 						"{{orderId}}",
 						"finish"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete customer",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cpf\": \"73627185005\",\r\n    \"email\": \"teste@email2.com\",\r\n    \"name\": \"cliente\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:83/api/erp/customers",
+					"host": [
+						"{{host}}"
+					],
+					"port": "83",
+					"path": [
+						"api",
+						"erp",
+						"customers"
 					]
 				}
 			},
