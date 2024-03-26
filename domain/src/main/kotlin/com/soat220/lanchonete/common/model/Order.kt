@@ -7,8 +7,8 @@ class Order(
     val id: Long? = null,
     var customer: Customer? = null,
     var orderItems: MutableList<OrderItem>,
-    val orderStatus: OrderStatus,
-    val notes: String,
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    var orderStatus: OrderStatus,
+    var notes: String,
+    var createdAt: LocalDateTime,
+    var updatedAt: LocalDateTime
 )

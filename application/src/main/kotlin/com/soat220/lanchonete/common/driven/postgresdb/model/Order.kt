@@ -1,5 +1,6 @@
 package com.soat220.lanchonete.common.driven.postgresdb.model
 
+import com.soat220.lanchonete.common.model.Customer
 import com.soat220.lanchonete.common.model.enums.OrderStatus
 import java.time.LocalDateTime
 import javax.persistence.CascadeType
@@ -22,9 +23,8 @@ class Order(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    val customer: Customer?,
+    @Column(name = "customer_id", nullable = true)
+    val customer: Long? = null,
 
     @Column(name = "status", nullable = false)
     var status: OrderStatus,
@@ -38,13 +38,13 @@ class Order(
     @Column(name = "updated_at", nullable = false)
     var updatedAt: LocalDateTime = LocalDateTime.now(),
 
-    @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     var orderItems: List<OrderItem> = mutableListOf()
 ) {
 
-    fun toDomain() = DomainOrder(
+    fun toDomain(customer: Customer?) = DomainOrder(
         id = id,
-        customer = customer?.toDomain(),
+        customer = customer,
         orderItems = orderItems.map { it.toDomain() }.toMutableList(),
         orderStatus = status,
         notes = notes,
@@ -55,7 +55,7 @@ class Order(
     companion object {
         fun fromDomain(order: DomainOrder) = Order(
             id = order.id,
-            customer = Customer.fromDomain(order.customer),
+            customer = order.customer?.id,
             orderItems = order.orderItems.map { OrderItem.fromDomain(it) }.toMutableList(),
             status = order.orderStatus,
             createdAt = order.createdAt,

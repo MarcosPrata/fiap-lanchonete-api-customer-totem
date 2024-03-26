@@ -8,11 +8,10 @@ import com.soat220.lanchonete.common.model.Product
 import com.soat220.lanchonete.common.model.enums.OrderStatus
 import com.soat220.lanchonete.common.result.Result
 import com.soat220.lanchonete.common.result.getOrNull
-import com.soat220.lanchonete.customerTotem.port.CreateCustomerPort
-import com.soat220.lanchonete.customerTotem.port.CreateOrderPort
-import com.soat220.lanchonete.customerTotem.port.FindCustomerByCpfPort
-import com.soat220.lanchonete.customerTotem.port.FindProductByIdPort
+import com.soat220.lanchonete.customerTotem.port.*
 import com.soat220.lanchonete.customerTotem.usecase.dto.CreateOrder
+import com.google.gson.GsonBuilder
+import com.soat220.lanchonete.common.config.LocalDateTimeTypeAdapter
 import java.time.LocalDateTime
 import javax.inject.Named
 import com.soat220.lanchonete.common.model.Customer as DomainCustomer
@@ -23,7 +22,13 @@ class CreateOrder(
     private val findProductByIdPort: FindProductByIdPort,
     private val createOrderPort: CreateOrderPort,
     private val createCustomerPort: CreateCustomerPort,
+    private val sendOrderQueuePort: SendOrderQueuePort
 ) {
+
+    private val gson = GsonBuilder()
+        .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeTypeAdapter())
+        .create()
+
     fun execute(createOrder: CreateOrder): Result<Order, DomainException> {
         val orderItems = createOrder.orderItems.map {
             val product = findProductByIdPort.execute(it.productId).getOrNull()
@@ -37,8 +42,6 @@ class CreateOrder(
 
         val customer = getCustomer(createOrder)
 
-        verifyPayment(orderItems)
-
         val order = Order(
             customer = customer,
             notes = createOrder.notes ?: "",
@@ -48,17 +51,26 @@ class CreateOrder(
             updatedAt = LocalDateTime.now()
         )
 
-        return createOrderPort.execute(order)
+        val orderModel = createOrderPort.execute(order, customer)
+
+        val orderDomain = orderModel.getOrNull()
+
+        // sincronizar com payment-service
+        orderDomain!!.orderItems = orderItems
+
+        this.sendOrderQueuePort.send(gson.toJson(orderDomain))
+
+        return orderModel
     }
 
     private fun getCustomer(createOrder: CreateOrder): DomainCustomer? {
         var customer: DomainCustomer? = null
 
         if (createOrder.customer != null) {
-            val existentCustomer = findCustomerByCpfPort.execute(createOrder.customer.cpf)
+            val customerErp = findCustomerByCpfPort.execute(createOrder.customer.cpf)
 
-            if (existentCustomer.getOrNull() != null) {
-                customer = existentCustomer.getOrNull()
+            if (customerErp.getOrNull() != null) {
+                customer = customerErp.getOrNull()
             } else {
                 customer = createCustomerPort.execute(
                     DomainCustomer(
@@ -71,21 +83,5 @@ class CreateOrder(
         }
 
         return customer
-    }
-
-    private fun verifyPayment(orderItems: MutableList<OrderItem>) {
-        val totalAmount = orderItems
-            .map { it.product.price * it.amount }
-            .reduce { acc, price -> acc + price }
-
-//        val paymentStatus =
-//            if (processPaymentPort.execute(order, totalAmount)) PaymentStatus.APPROVED
-//            else PaymentStatus.DECLINED
-//
-//        createPaymentPort.execute(order, paymentStatus, totalAmount).orThrow()
-//
-//        if (paymentStatus != PaymentStatus.APPROVED) {
-//            throw PaymentNotApprovedException("Payment not approved", ErrorCode.PAYMENT_NOT_APPROVED)
-//        }
     }
 }

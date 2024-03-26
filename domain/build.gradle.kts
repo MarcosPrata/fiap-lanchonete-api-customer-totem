@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("javax.inject:javax.inject:1")
     implementation("org.junit.jupiter:junit-jupiter:5.9.2")

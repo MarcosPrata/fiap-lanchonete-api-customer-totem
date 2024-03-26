@@ -2,16 +2,22 @@ version: '3'
 
 services:
   app:
-    container_name: "lanchonete_api"
+    container_name: "customer-totem-api"
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      DB_URL: jdbc:postgresql://postgres:5432/lanchonete
+      DB_URL: jdbc:postgresql://fiap-lanchonete-api-customer-totem-postgres-1:5432/customertotem
+      SERVER_PORT: 80
+      ERP_URL: http://erp
+      RABBIT_HOST: rabbitmq
+    networks:
+      - shared
     ports:
       - "80:80"
     depends_on:
       - postgres
+      - rabbitmq
 
   postgres:
     image: postgres
@@ -19,6 +25,23 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: lanchonete
+      POSTGRES_DB: customertotem
+    networks:
+      - shared
     ports:
       - "5432:5432"
+
+  rabbitmq:
+      build:
+        context: .
+        dockerfile: Dockerfile-rabbit
+      container_name: rabbitmq
+      networks:
+        - shared
+      ports:
+        - "5672:5672"
+        - "15672:15672"
+
+networks:
+  shared:
+

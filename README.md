@@ -12,9 +12,29 @@
 API Responsável pela gestão de pedidos de uma lanchonete, envolvendo desde a realização do pedido pelo cliente
 até o preparo do pedido pela cozinha.
 
+
+
 ![Diagrama da arquitetura do projeto](./docs/arquitetura.png)
 
+Arquitetura dos microsserviços
+
+![soat-lanchonete-architecture-final (1).jpg](docs%2Fsoat-lanchonete-architecture-final%20%281%29.jpg)
+
 Os seguintes repositórios também fazem parte desse projeto:
+
+Microsserviços:
+
+> [fiap-lanchonete-api-customer-totem](https://github.com/MarcosPrata/fiap-lanchonete-api-customer-totem) - Serviço responsável pela criação do pedido no Totem da Lanchonete.
+
+> [fiap-lanchonete-api-payment](https://github.com/MarcosPrata/fiap-lanchonete-api-payment) - Serviço responsável pela gestão do pagamento do pedido.
+
+> [fiap-lanchonete-api-kitchen](https://github.com/MarcosPrata/fiap-lanchonete-api-kitchen) - Serviço responsável por exibir os pedidos confirmados para a cozinha.
+
+> [fiap-lanchonete-api-orders-display](https://github.com/MarcosPrata/fiap-lanchonete-api-orders-display) - Serviço responsável por exibir os pedidos para os clientes (PREPARANDO E PRONTO).
+
+> [fiap-lanchonete-api-erp](https://github.com/MarcosPrata/fiap-lanchonete-api-erp) - Serviço responsável pelo gerenciamento dos produtos.
+
+Infra:
 
 > [fiap-lanchonete-terraform](https://github.com/MarcosPrata/fiap-lanchonete-terraform) - Reponsável por provisionar a infra na AWS.
 
@@ -27,51 +47,28 @@ Os seguintes repositórios também fazem parte desse projeto:
 - **Docker**
 - **Gradle** versão 6.6.1
 - **Java** 17 ou superior
-- **Kubectl** versão 5.0.1 ou superior
 
 ## 🚀 Quick Start
-- Rodar usando o Docker: 
-    - Execute o comando para subir os container do Postgres.
+- Rodar usando o Docker:
+    - Em cada serviço execute o comando abaixo para subir as app's, os bancos de dados e o rabbitMQ
+      (necessário subir primeiro o customer-totem, por conta da network compartilhada dos containers)
         - `$ docker-compose up`
-    - Ou clique no botão abaixo
-      - `gradlew up`
-    - Lembre-se de ter as portas 5432(postgres) e 80(aplicação) disponíveis!
+    - Lembre-se de ter as seguintes portas disponiveis: Serviços (80, 81, 82, 83), Postgres (5432, 5433, 5434, 5435) e RabbitMQ (5672, 15672)
 
-- Rodar usando o Gradle
-  - Caso rode usando o gradle é necessário iniciar o banco manualmente ou utilizando:
-    - `$ docker-compose run postgres`
-  - Use o comando abaixo:
-      - `gradlew bootRun`
-  - Ou pela própria IDE
-    - Indo no arquivo LanchoneteApplication.kt e clicando no simbolozinho de play.
 
-## ☁️ Deploy usando kubernetes
-- Habilite a opção de kubernetes no docker
-    - Usando o docker desktop vá em configurações => kubernetes => enable hubernetes
-    - Execute os seguintes comando para vincular o docker
-        - `$ kubectl config get-contexts`
-        - `$ kubectl config use-context docker-desktop`
-- Subir o postgres da aplicação
-    - Execute os seguintes comandos para subir
-        - `$ kubectl apply -f kubernetes/postgres/postgres-secrets.yaml`
-        - `$ kubectl apply -f kubernetes/postgres/postgres-config.yaml`
-        - `$ kubectl apply -f kubernetes/postgres/postgres-deployment.yaml`
-        - `$ kubectl apply -f kubernetes/postgres/postgres-svc.yaml`
-- Subir a instancia da aplicação
-    - Execute os seguintes comandos para subir
-        - `$ kubectl apply -f kubernetes/lanchonete-deployment.yaml`
-        - `$ kubectl apply -f kubernetes/lanchonete-svc.yaml`
-- Agora para visualizar os pods execute o seguinte comando:
-    - `$ kubectl get pods`
+## SAGA
 
-## ⚙️ Variáveis de Ambiente
-> **ACTIVE_PROFILE** { default: develop }
+- O padrão escolhido foi o **Coreografado**, onde cada nó sabe qual o próximo nó a ser chamado, seja seguindo na ação ou na compensação.
+- A Mensageria escolhida foi o RabbitMQ, pela facilidade no deploy e poucas configurações necessárias (acessado via localhost:15672 -u guest -p guest)
 
-> **DB_URL** { default: jdbc:postgresql://localhost:5432/lanchonete }
-> 
-> **DB_USER** { default: postgres }
-> 
-> **DB_PASSWORD** { default: postgres }
+## LGPD
+
+- [Relatório de Impacto à Proteção de Dados Pessoais (RIPD).pdf](docs%2FRelat%F3rio%20de%20Impacto%20%E0%20Prote%E7%E3o%20de%20Dados%20Pessoais%20%28RIPD%29.pdf)
+- ROTA responsável por exclusão dos dados pessoais dos clientes pode ser encontrado na collection da aplicação (Delete customer).
+
+## Postman collection
+
+* Acesse o arquivo em formato JSON que está salvo nesse repositório [Lanchonete.postman_collection.json](docs/Lanchonete.postman_collection.json)
 
 ## 💻 Insomnia Collections
 
@@ -85,10 +82,10 @@ Os seguintes repositórios também fazem parte desse projeto:
 
 ## 🎓 Integrantes / Devs
 
-> Nome: Marcos Henrique Prata Junior 
-> 
+> Nome: Marcos Henrique Prata Junior
+>
 > Matrícula: RM349949
-> 
+>
 > [![Linkedin](https://img.shields.io/badge/Linkedin-0E76A8.svg?style=for-the-badge&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/marcos-henrique-prata-junior/)
 > [![GitHub](https://img.shields.io/badge/GitHub-333.svg?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/MarcosPrata)
 
